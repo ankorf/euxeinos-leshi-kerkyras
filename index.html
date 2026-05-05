@@ -1,0 +1,606 @@
+<!DOCTYPE html>
+<html lang="el">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ευξείνιος Λέσχη Ποντίων Κέρκυρας</title>
+<style>
+  html, body { overflow-x: hidden; max-width: 100%; }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: Arial, sans-serif;
+    font-size: 12pt;
+    background: #f5f3ee;
+    color: #1a1a1a;
+  }
+
+  /* HEADER */
+  header {
+    background: #1a1a1a;
+    padding: 10px 8px 10px 0;
+    display: grid;
+    grid-template-columns: auto 1fr;
+    align-items: center;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.5);
+  }
+  .header-flag {
+    width: 8px;
+    height: 66px;
+    background: linear-gradient(to bottom, #FFD700 50%, #1a1a1a 50%);
+    margin-left: 10px;
+    margin-right: 14px;
+    flex-shrink: 0;
+  }
+  .header-title {
+    text-align: left;
+    padding: 0;
+  }
+  .header-title .main {
+    color: #FFD700;
+    font-size: 13pt;
+    font-weight: bold;
+    letter-spacing: 0.5px;
+    line-height: 1.3;
+  }
+  .header-title .sub {
+    color: #aaaaaa;
+    font-size: 9pt;
+    letter-spacing: 0.5px;
+  }
+
+  /* MAIN */
+  main {
+    max-width: 700px;
+    margin: 0 auto;
+    padding: 12px 12px 40px;
+  }
+
+  /* CATEGORY GROUP */
+  .category { margin-bottom: 18px; }
+  .category-label {
+    background: #1a1a1a;
+    color: #FFD700;
+    font-size: 9pt;
+    font-weight: bold;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    padding: 6px 14px;
+    border-radius: 6px 6px 0 0;
+  }
+
+  /* ACCORDION ITEM */
+  .item {
+    background: #fff;
+    border-left: 1px solid #d4d0c8;
+    border-right: 1px solid #d4d0c8;
+    border-bottom: 1px solid #d4d0c8;
+    width: 100%;
+    overflow: hidden;
+  }
+  .item:last-child { border-radius: 0 0 6px 6px; }
+
+  .item-btn {
+    width: 100%;
+    background: none;
+    border: none;
+    padding: 13px 14px;
+    text-align: left;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-family: Arial, sans-serif;
+    font-size: 12pt;
+    font-weight: bold;
+    color: #1a1a1a;
+    transition: background 0.15s;
+  }
+  .item-btn:hover { background: #f5f3ee; }
+  .item-btn.open {
+    background: #f5f3ee;
+    border-bottom: 2px solid #FFD700;
+  }
+
+  .arrow {
+    font-size: 10pt;
+    color: #888;
+    transition: transform 0.2s;
+    flex-shrink: 0;
+    margin-left: 8px;
+  }
+  .item-btn.open .arrow { transform: rotate(180deg); }
+
+  .item-content {
+    display: none;
+    padding: 14px 16px 16px;
+    line-height: 1.75;
+    color: #1a1a1a;
+    background: #fafaf8;
+    overflow-x: auto;
+  }
+  .item-content.open { display: block; }
+
+  /* Content styles */
+  .item-content p { margin-bottom: 8px; }
+  .item-content ol { padding-left: 20px; margin-bottom: 8px; }
+  .item-content ol li { margin-bottom: 6px; }
+  .item-content ul { padding-left: 20px; margin-bottom: 8px; }
+  .item-content ul li { margin-bottom: 4px; }
+
+  .item-content .note {
+    background: #fffbea;
+    border-left: 4px solid #FFD700;
+    padding: 8px 12px;
+    margin: 10px 0;
+    border-radius: 0 4px 4px 0;
+    font-style: italic;
+  }
+  .item-content .highlight {
+    background: #1a1a1a;
+    color: #FFD700;
+    padding: 8px 12px;
+    margin: 10px 0;
+    border-radius: 4px;
+    font-weight: bold;
+    text-align: center;
+    font-size: 13pt;
+  }
+
+  /* Schedule/info table */
+  .info-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 8px 0;
+    font-size: 11pt;
+  }
+  .info-table td {
+    padding: 6px 8px;
+    border-bottom: 1px solid #e0ddd5;
+  }
+  .info-table td:first-child {
+    font-weight: bold;
+    color: #1a1a1a;
+    width: 45%;
+  }
+
+  /* Department blocks */
+  .dept-block {
+    background: #f5f3ee;
+    border-left: 4px solid #FFD700;
+    padding: 10px 14px;
+    margin: 10px 0;
+    border-radius: 0 4px 4px 0;
+  }
+  .dept-block h4 {
+    color: #1a1a1a;
+    font-size: 12pt;
+    margin-bottom: 4px;
+  }
+  .dept-block .age-badge {
+    display: inline-block;
+    background: #FFD700;
+    color: #1a1a1a;
+    font-size: 9pt;
+    font-weight: bold;
+    padding: 2px 8px;
+    border-radius: 10px;
+    margin-bottom: 6px;
+  }
+  .dept-block p { font-size: 11pt; margin-bottom: 4px; }
+
+  /* Contact / phone box */
+  .contact-box {
+    background: #1a1a1a;
+    color: white;
+    border-radius: 6px;
+    padding: 12px 16px;
+    margin: 10px 0;
+    text-align: center;
+  }
+  .contact-box .label {
+    font-size: 9pt;
+    color: #FFD700;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+  }
+  .contact-box .value {
+    font-size: 16pt;
+    font-weight: bold;
+    letter-spacing: 1px;
+    margin-top: 2px;
+  }
+  .contact-box .note {
+    font-size: 9pt;
+    color: #aaaaaa;
+    margin-top: 4px;
+    background: none;
+    border: none;
+    padding: 0;
+    font-style: normal;
+  }
+
+  /* Social Media buttons */
+  .social-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin: 8px 0;
+  }
+  .social-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    padding: 14px 12px;
+    border-radius: 8px;
+    font-size: 13pt;
+    font-weight: bold;
+    text-decoration: none;
+    transition: opacity 0.15s;
+    color: white;
+  }
+  .social-btn:hover { opacity: 0.85; }
+  .social-btn svg { width: 24px; height: 24px; fill: currentColor; flex-shrink: 0; }
+  .social-btn.fb { background: #1877f2; }
+  .social-btn.ig { background: linear-gradient(135deg, #833ab4, #fd1d1d, #fcb045); }
+  .social-btn.blog { background: #f57c00; grid-column: 1 / -1; }
+
+  /* Event items */
+  .event-item {
+    display: flex;
+    gap: 14px;
+    padding: 10px 0;
+    border-bottom: 1px solid #e0ddd5;
+  }
+  .event-item:last-child { border-bottom: none; }
+  .event-date-box {
+    background: #1a1a1a;
+    color: #FFD700;
+    border-radius: 6px;
+    padding: 8px 12px;
+    text-align: center;
+    min-width: 60px;
+    flex-shrink: 0;
+  }
+  .event-date-box .day { display: block; font-size: 18pt; font-weight: bold; line-height: 1; }
+  .event-date-box .month { display: block; font-size: 8pt; text-transform: uppercase; margin-top: 2px; }
+  .event-info h4 { font-size: 12pt; margin-bottom: 4px; }
+  .event-info p { font-size: 10pt; color: #555; }
+
+  /* QR section */
+  .qr-section {
+    text-align: center;
+    padding: 16px;
+    background: white;
+    border: 1px solid #d4d0c8;
+    border-radius: 6px;
+    margin: 12px 0;
+  }
+  .qr-section img {
+    width: 180px;
+    height: 180px;
+    display: block;
+    margin: 0 auto 8px;
+  }
+  .qr-section p {
+    font-size: 9pt;
+    color: #888;
+    letter-spacing: 0.5px;
+  }
+  .qr-section .url {
+    font-size: 10pt;
+    color: #1a1a1a;
+    font-weight: bold;
+    margin-top: 4px;
+    word-break: break-all;
+  }
+
+  /* Footer */
+  footer {
+    text-align: center;
+    padding: 16px;
+    font-size: 9pt;
+    color: #888;
+    border-top: 2px solid #FFD700;
+    max-width: 700px;
+    margin: 0 auto;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-flag"></div>
+  <div class="header-title">
+    <div class="main">Ευξείνιος Λέσχη Ποντίων Κέρκυρας</div>
+    <div class="sub">Χορευτικός & Πολιτιστικός Σύλλογος · από το 1997</div>
+  </div>
+</header>
+
+<main>
+
+  <!-- ΣΥΛΛΟΓΟΣ -->
+  <div class="category">
+    <div class="category-label">Ο Σύλλογος</div>
+
+    <div class="item">
+      <button class="item-btn" onclick="toggle(this)">
+        Ιστορία &amp; Αποστολή <span class="arrow">▼</span>
+      </button>
+      <div class="item-content">
+        <p>Η <strong>Ευξείνιος Λέσχη Ποντίων Κέρκυρας</strong> ιδρύθηκε το <strong>1997</strong> από Πόντιους που βρήκαν δεύτερη πατρίδα στην Κέρκυρα, με σκοπό να διατηρήσουν ζωντανή την πολιτιστική κληρονομιά των προγόνων τους.</p>
+        <p>Σήμερα ο σύλλογος αριθμεί περισσότερα από <strong>150 μέλη</strong> όλων των ηλικιών και αποτελεί έναν από τους πιο ενεργούς πολιτιστικούς φορείς του νησιού, με παρουσία σε εκδηλώσεις σε όλη την Ελλάδα.</p>
+        <div class="note">«Η αποστολή μας είναι τριπλή: να <strong>διατηρήσουμε</strong>, να <strong>διαδώσουμε</strong> και να <strong>μεταδώσουμε</strong> την ποντιακή παράδοση στις επόμενες γενιές.»</div>
+      </div>
+    </div>
+
+    <div class="item">
+      <button class="item-btn" onclick="toggle(this)">
+        Διοικητικό Συμβούλιο <span class="arrow">▼</span>
+      </button>
+      <div class="item-content">
+        <table class="info-table">
+          <tr><td>Πρόεδρος</td><td>—</td></tr>
+          <tr><td>Αντιπρόεδρος</td><td>—</td></tr>
+          <tr><td>Γραμματέας</td><td>—</td></tr>
+          <tr><td>Ταμίας</td><td>—</td></tr>
+          <tr><td>Χορογράφος</td><td>—</td></tr>
+        </table>
+        <p style="font-size:10pt; color:#888; margin-top:8px;">Για ενημέρωση του ΔΣ επικοινωνήστε μαζί μας.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ΠΟΝΤΟΣ -->
+  <div class="category">
+    <div class="category-label">Ο Πόντος</div>
+
+    <div class="item">
+      <button class="item-btn" onclick="toggle(this)">
+        Ιστορία του Πόντου <span class="arrow">▼</span>
+      </button>
+      <div class="item-content">
+        <p>Ο <strong>Πόντος</strong> είναι ιστορική περιοχή στις νότιες ακτές του Εύξεινου Πόντου (Μαύρη Θάλασσα), με ελληνική παρουσία από τον 8ο αιώνα π.Χ. Η ακμή του ελληνισμού στην περιοχή κορυφώθηκε με την <strong>Αυτοκρατορία της Τραπεζούντας</strong> (1204–1461).</p>
+        <p>Οι Πόντιοι Έλληνες διατήρησαν επί αιώνες τη γλώσσα, τα ήθη, τα έθιμα και τους χορούς τους — ένα πολιτισμικό αποτύπωμα μοναδικό στον ελληνικό κόσμο.</p>
+        <p>Μετά τις <strong>ανταλλαγές πληθυσμών</strong> και τον ξεριζωμό της δεκαετίας του 1920, οι Πόντιοι εγκαταστάθηκαν στην Ελλάδα, κουβαλώντας μαζί τους έναν πολιτισμό που ζει και σήμερα μέσα από τους συλλόγους.</p>
+      </div>
+    </div>
+
+    <div class="item">
+      <button class="item-btn" onclick="toggle(this)">
+        19 Μαΐου — Ημέρα Μνήμης <span class="arrow">▼</span>
+      </button>
+      <div class="item-content">
+        <div class="highlight">19 Μαΐου — Ημέρα Μνήμης Γενοκτονίας Ποντίων</div>
+        <p>Η <strong>19η Μαΐου</strong> έχει οριστεί από το ελληνικό κράτος (ν. 2193/1994) ως Ημέρα Μνήμης της Γενοκτονίας των Ελλήνων του Πόντου.</p>
+        <p>Κατά την περίοδο 1914–1923 υπολογίζεται ότι <strong>πάνω από 300.000 Πόντιοι</strong> έχασαν τη ζωή τους από διωγμούς, εκτοπισμούς και τάγματα εργασίας.</p>
+        <p>Κάθε χρόνο ο σύλλογός μας τιμά την ημέρα αυτή με επιμνημόσυνες δεήσεις, εκδηλώσεις μνήμης και πολιτιστικές παρουσιάσεις.</p>
+        <div class="note">«Δεν ξεχνάμε — τιμάμε τους προγόνους μας με κάθε βήμα του χορού μας.»</div>
+      </div>
+    </div>
+
+    <div class="item">
+      <button class="item-btn" onclick="toggle(this)">
+        Ποντιακοί Χοροί &amp; Παράδοση <span class="arrow">▼</span>
+      </button>
+      <div class="item-content">
+        <p>Οι ποντιακοί χοροί είναι από τους πιο δυναμικούς και αναγνωρίσιμους στον ελληνικό χώρο. Χαρακτηρίζονται από <strong>έντονους ρυθμούς</strong>, εκφραστικές κινήσεις και βαθιά συναισθηματική φόρτιση.</p>
+        <ul>
+          <li><strong>Σέρρα</strong> — ο αρχαιότερος πολεμικός χορός, σύμβολο αντίστασης</li>
+          <li><strong>Τρυγόνα</strong> — λυρικός χορός εμπνευσμένος από το τρυγόνι</li>
+          <li><strong>Κότσαρι</strong> — ζωηρός κυκλικός χορός</li>
+          <li><strong>Τίκ</strong> — χορός ζευγαριού με λεπτές κινήσεις</li>
+          <li><strong>Λαζούτα</strong> — χορός από την παράκτια Ποντιακή ζώνη</li>
+        </ul>
+        <p style="margin-top:8px;">Κύριο μουσικό όργανο η <strong>κεμεντζέ</strong> (ποντιακή λύρα), συνοδεύεται από δαούλι και τουλούμι.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ΤΜΗΜΑΤΑ -->
+  <div class="category">
+    <div class="category-label">Χορευτικά Τμήματα</div>
+
+    <div class="item">
+      <button class="item-btn" onclick="toggle(this)">
+        Τμήματα &amp; Ωράρια <span class="arrow">▼</span>
+      </button>
+      <div class="item-content">
+
+        <div class="dept-block">
+          <span class="age-badge">5–12 ετών</span>
+          <h4>Παιδικό Τμήμα</h4>
+          <p>Εισαγωγή στον ποντιακό χορό μέσα από παιχνίδι και δημιουργικές δραστηριότητες.</p>
+          <table class="info-table" style="margin-top:6px;">
+            <tr><td>Ημέρα</td><td>Σάββατο</td></tr>
+            <tr><td>Ώρα</td><td>10:00 – 11:00</td></tr>
+          </table>
+        </div>
+
+        <div class="dept-block">
+          <span class="age-badge">13–17 ετών</span>
+          <h4>Εφηβικό Τμήμα</h4>
+          <p>Προχωρημένη εκμάθηση με έμφαση στην τεχνική και την προετοιμασία για παραστάσεις.</p>
+          <table class="info-table" style="margin-top:6px;">
+            <tr><td>Ημέρα</td><td>Σάββατο</td></tr>
+            <tr><td>Ώρα</td><td>11:00 – 12:30</td></tr>
+          </table>
+        </div>
+
+        <div class="dept-block">
+          <span class="age-badge">18+ ετών</span>
+          <h4>Ενήλικο Τμήμα</h4>
+          <p>Ανοιχτό σε όλες τις ηλικίες. Δεν απαιτείται προηγούμενη εμπειρία.</p>
+          <table class="info-table" style="margin-top:6px;">
+            <tr><td>Ημέρα</td><td>Πέμπτη</td></tr>
+            <tr><td>Ώρα</td><td>19:00 – 21:00</td></tr>
+          </table>
+        </div>
+
+        <p style="font-size:10pt; color:#888; margin-top:10px;">Για εγγραφές επικοινωνήστε μαζί μας.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ΕΚΔΗΛΩΣΕΙΣ -->
+  <div class="category">
+    <div class="category-label">Εκδηλώσεις</div>
+
+    <div class="item">
+      <button class="item-btn" onclick="toggle(this)">
+        Ετήσιο Πρόγραμμα <span class="arrow">▼</span>
+      </button>
+      <div class="item-content">
+
+        <div class="event-item">
+          <div class="event-date-box">
+            <span class="day">19</span>
+            <span class="month">Μαΐου</span>
+          </div>
+          <div class="event-info">
+            <h4>Ημέρα Μνήμης Γενοκτονίας</h4>
+            <p>Επιμνημόσυνη εκδήλωση, κατάθεση στεφάνων, πολιτιστικό πρόγραμμα.</p>
+          </div>
+        </div>
+
+        <div class="event-item">
+          <div class="event-date-box" style="background:#555;">
+            <span class="day" style="font-size:12pt;">Άνοιξη</span>
+            <span class="month">/ Καλ/ρι</span>
+          </div>
+          <div class="event-info">
+            <h4>Ποντιακή Βραδιά</h4>
+            <p>Παράσταση από όλα τα τμήματα του συλλόγου. Ελεύθερη είσοδος.</p>
+          </div>
+        </div>
+
+        <div class="event-item">
+          <div class="event-date-box" style="background:#555;">
+            <span class="day" style="font-size:12pt;">Σεπτ.</span>
+            <span class="month">Εγγραφές</span>
+          </div>
+          <div class="event-info">
+            <h4>Ανοιχτή Ημέρα — Νέα Μέλη</h4>
+            <p>Δωρεάν δοκιμαστικό μάθημα για όποιον θέλει να ενταχθεί στον σύλλογο.</p>
+          </div>
+        </div>
+
+        <div class="event-item">
+          <div class="event-date-box" style="background:#555;">
+            <span class="day" style="font-size:12pt;">Ιούν.</span>
+            <span class="month">Λήξη</span>
+          </div>
+          <div class="event-info">
+            <h4>Καλοκαιρινή Γιορτή</h4>
+            <p>Λήξη της χρονιάς με παράσταση, ποντιακή μουσική και φαγητό.</p>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- ΣΥΝΔΕΣΜΟΙ -->
+  <div class="category">
+    <div class="category-label">Σύνδεσμοι</div>
+
+    <div class="item">
+      <button class="item-btn" onclick="toggle(this)">
+        Social Media &amp; Blog <span class="arrow">▼</span>
+      </button>
+      <div class="item-content">
+        <p style="margin-bottom:12px; font-size:11pt;">Ακολουθήστε μας για νέα, φωτογραφίες και βίντεο από τις εκδηλώσεις μας.</p>
+        <div class="social-grid">
+          <a class="social-btn fb" href="https://www.facebook.com/share/18bx9mQcza/" target="_blank" rel="noopener">
+            <svg viewBox="0 0 24 24"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
+            Facebook
+          </a>
+          <a class="social-btn ig" href="https://www.instagram.com/pontos_kerkyra/" target="_blank" rel="noopener">
+            <svg viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
+            Instagram
+          </a>
+          <a class="social-btn blog" href="https://pontos-kerkyra.blogspot.com" target="_blank" rel="noopener">
+            <svg viewBox="0 0 24 24"><path d="M21.976 24H2.026C.905 24 0 23.095 0 21.976V2.026C0 .905.905 0 2.026 0h19.95C23.097 0 24 .905 24 2.026v19.95C24 23.095 23.097 24 21.976 24zM11 7H7a1 1 0 0 0-1 1v8a1 1 0 0 0 1 1h10a1 1 0 0 0 1-1v-4a1 1 0 0 0-1-1h-1V8a1 1 0 0 0-1-1h-4zm0 2h3v1h1v4H8V9h3z"/></svg>
+            Blog / Νέα
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ΕΠΙΚΟΙΝΩΝΙΑ -->
+  <div class="category">
+    <div class="category-label">Επικοινωνία</div>
+
+    <div class="item">
+      <button class="item-btn" onclick="toggle(this)">
+        Στοιχεία Επικοινωνίας <span class="arrow">▼</span>
+      </button>
+      <div class="item-content">
+
+        <div class="contact-box">
+          <div class="label">Τηλέφωνο</div>
+          <div class="value">
+            <a href="tel:2661024474" style="color:#FFD700; text-decoration:none;">26610 24474</a>
+          </div>
+          <div class="note">Ώρες επικοινωνίας: καθημερινές 09:00–21:00</div>
+        </div>
+
+        <div class="contact-box" style="background:#2a2a2a; margin-top:8px;">
+          <div class="label">Email</div>
+          <div class="value" style="font-size:13pt;">
+            <a href="mailto:pontoskerkyra@gmail.com" style="color:#FFD700; text-decoration:none;">pontoskerkyra@gmail.com</a>
+          </div>
+        </div>
+
+        <table class="info-table" style="margin-top:12px;">
+          <tr><td>Διεύθυνση</td><td>Γεωργάκη 28, Κέρκυρα</td></tr>
+          <tr><td>Ίδρυση</td><td>1997</td></tr>
+          <tr><td>Μέλη</td><td>~150</td></tr>
+        </table>
+
+      </div>
+    </div>
+
+    <div class="item">
+      <button class="item-btn" onclick="toggle(this)">
+        QR Code — Μοιράστε το Site <span class="arrow">▼</span>
+      </button>
+      <div class="item-content">
+        <div class="qr-section">
+          <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAcIAAAHCAQAAAABUY/ToAAAEAUlEQVR4nO1cbY6jMAx1DNL8DDfYo9CbjfZIe4NylB5gJfg5EpVXdpyEGYlNSxl1Gvx+oAJ5Kk2fHH8FR7ANA24kAhizBCyOWIMxS8DiiDUYswQsjliDMUvA4og1GLMELI5YgzFrnCGnaAFgck6vdez28LUh3gg4PflptwA3sRjGvHGGemKM/NHP4RKd4ercyX/wQa41Mig64Ta3JeDBmJPaF7E+7jS14N5HFs3Y0NI2iUV6+tPeD9zACTDm3TPUX3jx6q5BNBA+eSJdwf7DvBlozKpmqP1yTjA1swNoZhi6vy2AZ139aWeCaa/vRGNWqSHPbk5QydXRcAJwerMhN/yKPtKTnxaN+QNnCJZuMjQE/bh6AFg44Gf7P0vAQ9khSuekNufqCGAGGrqGD2yVxFQ992nRmD/WDhHRDGJp6OxnPaRrwHYo4BwDfLNDZeARNUSSJEoRPaMnlpSkizhJtFDTa/1ONOa3a2iUE3Z7krkJNmdkNcW8o3pGpqGbgMfyqfsklZyx5k/AqSG9K4N5uTM7VKMS8OG4zKcKh4+rmyxeIBoKMvt897V+Jxrz+zVEwSmKB1nQFLGQphbJNHQj8Hj+EAV3Otocdaf9J4skMH+oRiXgZibkmF1EowdZt0LxPuUYU4Rma1mNSsAd7dAI0eaICWINLZYx86lrVQLuUeugcxbNIraHlB/SVc3sUJVKwMdje1ikEkUvwfCcoxeUTZD5Q1UqAfepufpU3IixPeWoTVc1s0OVKgE3MyHmgmIq8UvBo0+HnMU2n7pGJeAeaxksUtRhGZt5QPazNWozDVWpBHy85kqLImtcvCAmpoO3pHbI/KEqlYCbmRDd5NjsoU6RutOUG0DEFbLej2qVgA8y6XfcS5ZdZ/d+cQ6GTvNDRNysnyv4L/k7twA3sY7Xx+jAi1RGcP3FcePiyL2NxDe4t5G78/szn0I7v+TvRGN+f2zfLKtk2pI2J/eIr+Uwzer2NwGPmGP0nzoaU0MsqaNkvbA1KwF3YfbsAAVMssH+jcQfck6corAVlvdP/4invQ945/gMY968r4PCJjPenkiiJNeTbHGVW1f2h2TPWdoEYnNbAh71vR99aPGQvdINR2MpOBPbxAozO1SvEjaBchlVKhxans+poWbRaB37Ha0Xtj4l4D61jlEjLy3ey/1UhxVYraNaJeB+GoK8QSgmpsNA7UGzfupKlYC7MUnqq0N+3Zn/cLn9zLnO4rKX+j+f894PP4fIS4Ozyxu5sJZN3U7ficascYYGCcuCSK4ciHFcNrVcSNO3WblTdLaf/7QbgFtIAmOW4Owd5wVgacAqjFkCFkeswZglYHHEGoxZAhZHrMGYJWBxxBqMWQIWR8DBmf8AS1aD/sXmB4YAAAAASUVORK5CYII=" alt="QR Code">
+          <p>Σκανάρετε για να ανοίξετε το site στο κινητό σας</p>
+          <div class="url">ankorf.github.io/euxeinios-kerkyras</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+</main>
+
+<footer>
+  Ευξείνιος Λέσχη Ποντίων Κέρκυρας · Γεωργάκη 28, Κέρκυρα · ιδρύθηκε 1997
+</footer>
+
+<script>
+function toggle(btn) {
+  const content = btn.nextElementSibling;
+  const isOpen = btn.classList.contains('open');
+  document.querySelectorAll('.item-btn.open').forEach(b => {
+    b.classList.remove('open');
+    b.nextElementSibling.classList.remove('open');
+  });
+  if (!isOpen) {
+    btn.classList.add('open');
+    content.classList.add('open');
+  }
+}
+</script>
+
+</body>
+</html>
