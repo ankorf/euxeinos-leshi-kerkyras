@@ -35,7 +35,7 @@ body{font-family:'Inter',sans-serif;background:#0a0a0a;color:#e8e0d0;overflow-x:
 .hero-bg img{width:100%;height:100%;object-fit:cover;object-position:center 30%}
 .hero-overlay{position:absolute;inset:0;background:linear-gradient(to bottom,rgba(0,0,0,.55) 0%,rgba(0,0,0,.72) 60%,rgba(0,0,0,.9) 100%)}
 .hero-pattern{position:absolute;inset:0;background-image:linear-gradient(rgba(212,175,55,.04) 1px,transparent 1px),linear-gradient(90deg,rgba(212,175,55,.04) 1px,transparent 1px);background-size:60px 60px}
-.hero-content{position:relative;z-index:1;text-align:center;max-width:720px}
+.hero-content{position:relative;z-index:1;text-align:center;max-width:720px;margin-bottom:120px}
 .hero-logo{width:100px;height:auto;border-radius:6px;margin-bottom:24px;box-shadow:0 0 40px rgba(212,175,55,.35)}
 .hero-content h1{font-family:'Playfair Display',serif;font-size:clamp(30px,5.5vw,54px);font-weight:700;color:#fff;line-height:1.2;margin-bottom:14px}
 .hero-content h1 span{color:var(--gold)}
